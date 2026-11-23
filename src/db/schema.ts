@@ -1,0 +1,48 @@
+import { boolean, integer, jsonb, pgTable, real, text, timestamp } from "drizzle-orm/pg-core";
+import type { Cues, MixSettings, Plan, Section } from "../lib/types";
+
+export const tracks = pgTable("tracks", {
+  id: text("id").primaryKey(),
+  owner: text("owner").notNull(),
+  title: text("title").notNull().default(""),
+  artist: text("artist").notNull().default(""),
+  filename: text("filename").notNull().default(""),
+  format: text("format").notNull().default(""),
+  sizeBytes: integer("size_bytes").notNull().default(0),
+  duration: real("duration").notNull().default(0),
+  bpm: real("bpm").notNull().default(120),
+  bpmConfidence: real("bpm_confidence").notNull().default(0),
+  key: text("key").notNull().default(""),
+  camelot: text("camelot").notNull().default(""),
+  keyConfidence: real("key_confidence").notNull().default(0),
+  energy: integer("energy").notNull().default(50),
+  hasVocals: boolean("has_vocals").notNull().default(false),
+  vocalConfidence: real("vocal_confidence").notNull().default(0),
+  density: integer("density").notNull().default(50),
+  dryness: integer("dryness").notNull().default(50),
+  genre: text("genre").notNull().default(""),
+  tags: jsonb("tags").$type<string[]>().notNull().default([]),
+  playlist: text("playlist").notNull().default(""),
+  priority: integer("priority").notNull().default(3),
+  noStretch: boolean("no_stretch").notNull().default(false),
+  firstDownbeat: real("first_downbeat").notNull().default(0),
+  gridConfidence: real("grid_confidence").notNull().default(0),
+  totalBars: integer("total_bars").notNull().default(0),
+  rmsDb: real("rms_db").notNull().default(-18),
+  sections: jsonb("sections").$type<Section[]>().notNull().default([]),
+  cues: jsonb("cues").$type<Cues>().notNull(),
+  waveform: jsonb("waveform").$type<number[]>().notNull().default([]),
+  edits: jsonb("edits").$type<string[]>().notNull().default([]),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const projects = pgTable("projects", {
+  id: text("id").primaryKey(),
+  owner: text("owner").notNull(),
+  name: text("name").notNull().default("Новый микс"),
+  settings: jsonb("settings").$type<MixSettings>().notNull(),
+  plan: jsonb("plan").$type<Plan | null>(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
